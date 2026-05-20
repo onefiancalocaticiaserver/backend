@@ -11,7 +11,7 @@ if [ -z "$(git ls-files)" ]; then
   exit 0
 fi
 
-if git grep --cached -n -E "(Onefiancalocaticia@|On3fi|177\\.7\\.39\\.70)" -- \
+if git grep --cached -n -E "(Onefiancalocaticia@|On3fi|177\\.7\\.39\\.70|ghp_[A-Za-z0-9_]+|github_pat_)" -- \
   ':!scripts/check_no_tracked_secrets.sh'; then
   echo "Potential tracked secret found."
   exit 1

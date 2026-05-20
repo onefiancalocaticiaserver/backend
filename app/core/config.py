@@ -41,6 +41,11 @@ class Settings(BaseSettings):
     one_api_port: int = 8000
     one_api_log_level: str = "info"
     one_api_internal_token: SecretStr = SecretStr("local-dev-token")
+    admin_jwt_secret: SecretStr = SecretStr("local-dev-admin-secret-change-me-32b")
+    admin_jwt_expires_minutes: int = 720
+    bootstrap_admin_email: str = "admin@onefiancalocaticia.com.br"
+    bootstrap_admin_password: SecretStr = SecretStr("change-me")
+    bootstrap_admin_full_name: str = "One Admin"
 
     one_mcp_host: str = "0.0.0.0"
     one_mcp_port: int = 8100

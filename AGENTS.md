@@ -15,7 +15,7 @@ LGPD-relevant.
 - SQLAlchemy 2.x and Alembic for persistence and migrations
 - Pydantic v2 for schemas and settings
 - Local filesystem storage for documents in the MVP
-- Custom MCP service for Hermes integration in a later phase
+- FastMCP service for Hermes integration
 
 ## Rules
 
@@ -23,7 +23,7 @@ LGPD-relevant.
 - Do not commit `.env`, `*.env`, `vps.env`, dumps, logs, keys or real credentials.
 - Never expose a generic SQL execution endpoint or MCP tool.
 - Keep business rules in services, not route handlers.
-- All sensitive writes must be auditable once the domain layer is implemented.
+- All sensitive writes must be auditable.
 - Store document metadata in Postgres, not binary blobs.
 - Use migrations for schema changes.
 
@@ -36,4 +36,3 @@ LGPD-relevant.
 - Format check: `uv run ruff format --check .`
 - Type check: `uv run mypy app`
 - Migrate: `uv run alembic upgrade head`
-

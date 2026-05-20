@@ -4,7 +4,7 @@ Gerado em: 2026-05-20
 
 ## Fase 0 - Fundacao tecnica
 
-Status: iniciada.
+Status: implementada no scaffold local.
 
 Entregas:
 
@@ -26,6 +26,8 @@ Aceite:
 - `vps.env` permanece fora do Git.
 
 ## Fase 1 - Cadastro de imobiliarias e corretores
+
+Status: implementada no backend.
 
 Objetivo: permitir que o site/frontend e o Hermes cadastrem imobiliarias e corretores, e que um unico admin interno consulte e gerencie esses cadastros.
 

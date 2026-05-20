@@ -23,7 +23,7 @@ Gerado em: 2026-05-20
 
 ## Backlog de integracao
 
-- Configuracao final Hermes/MCP.
+- Validacao final do cliente Hermes consumindo o endpoint MCP.
 - Definir se Hermes roda na mesma VPS e mesma rede Docker.
 - Frontend publico do site consumindo APIs `public`.
 - Admin web interno.
@@ -37,10 +37,10 @@ Gerado em: 2026-05-20
 - Chave SSH da VPS foi criada localmente, mas ainda nao instalada porque a senha root informada foi recusada.
 - Docker Compose de producao ainda expoe `one-api` diretamente em `8000`; antes de producao real, colocar reverse proxy HTTPS.
 - Fase 0 ainda nao tem CI no GitHub Actions.
-- `.env.example` ainda tem placeholders amplos; precisara ser alinhado com a Fase 1.
-- MCP esta apenas como placeholder HTTP 501 no Marco 1.
-- Ainda nao existe modelo de usuarios/admin.
-- Ainda nao existe camada de auditoria real.
+- Criar GitHub Actions para quality gates.
+- Criar suite de smoke test autenticada pos-deploy alem de healthcheck.
+- Avaliar troca de PBKDF2 por Argon2/bcrypt antes de producao.
+- Revisar juridicamente `opt_in_marketing=true` como default antes de producao.
 - Ainda nao existe politica automatizada de retencao/anonimizacao.
 
 ## Pendencias operacionais

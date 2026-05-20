@@ -28,7 +28,7 @@ Failure response:
 {"detail": "database_unavailable"}
 ```
 
-## Fase 1 - Planejado
+## Fase 1 - Cadastros de parceiros
 
 APIs publicas para o frontend do site:
 
@@ -66,3 +66,33 @@ Observacoes:
 - `DELETE` publico nao entra na recomendacao inicial; remocao deve ser admin ou solicitacao autenticada.
 - `DELETE` admin e MCP devem ser soft delete/cancelamento.
 - `origem` representa a fonte do cadastro: `site`, `chatbot`, `one`, `app_interno`, `api`, `importacao` ou `outro`.
+
+## MCP Hermes
+
+Endpoint HTTP MCP:
+
+```http
+POST /mcp
+Authorization: Bearer <ONE_MCP_AUTH_TOKEN>
+```
+
+Tools implementadas:
+
+```text
+criar_imobiliaria
+obter_imobiliaria
+atualizar_imobiliaria
+remover_imobiliaria
+criar_corretor
+obter_corretor
+atualizar_corretor
+remover_corretor
+vincular_corretor_imobiliaria
+adicionar_observacao_parceiro
+```
+
+Regras:
+
+- `remover_*` executa soft delete;
+- chamadas MCP registram auditoria com `ator_tipo=hermes`;
+- `criar_*` usa `origem=chatbot` quando a origem nao for informada.

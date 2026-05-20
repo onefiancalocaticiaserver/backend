@@ -2,14 +2,9 @@
 
 ## Current State
 
-The first milestone is local/backend scaffold only. Production deployment should
-wait until:
-
-- the GitHub repository is private;
-- VPS credentials are rotated;
-- SSH key access is validated;
-- Postgres 18 is confirmed or recreated;
-- runtime DB roles are created.
+Fase 1 tem deploy scriptado por SSH e Docker Compose. Antes de producao real,
+ainda e necessario preencher `.env` na VPS com segredos reais, validar chave SSH,
+CORS do frontend e TLS/reverse proxy.
 
 ## Temporary Access
 
@@ -30,3 +25,34 @@ domain/subdomain before opening regular access.
 
 `one-mcp` and Postgres must stay internal. Do not expose either publicly.
 
+## Local Deploy Command
+
+Crie um `ops.env` fora do Git a partir de `ops.env.example` e rode:
+
+```bash
+OPS_ENV=/caminho/seguro/ops.env scripts/deploy_vps.sh
+```
+
+O script:
+
+- cria diretorios em `/opt/one-fianca-backend` e `/srv/one-fianca`;
+- clona ou atualiza o repo;
+- exige `.env` real na VPS;
+- sobe `docker-compose.prod.yml`;
+- executa `alembic upgrade head`;
+- executa `scripts/bootstrap_admin.py`;
+- valida `/v1/health` e `/v1/health/db`.
+
+## Bootstrap Admin
+
+O admin inicial e criado/atualizado por:
+
+```bash
+python scripts/bootstrap_admin.py
+```
+
+Variaveis usadas:
+
+- `BOOTSTRAP_ADMIN_EMAIL`;
+- `BOOTSTRAP_ADMIN_PASSWORD`;
+- `BOOTSTRAP_ADMIN_FULL_NAME`.

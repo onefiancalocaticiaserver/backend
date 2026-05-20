@@ -1,15 +1,19 @@
 # One Fianca Backend
 
-Backend scaffold for One Fianca Locaticia.
+Backend for One Fianca Locaticia.
 
 ## Current Milestone
 
-Marco 1 creates the secure project foundation:
+Fase 1 implements the partner registration foundation:
 
 - FastAPI app with `/v1/health` and `/v1/health/db`;
 - SQLAlchemy/PostgreSQL connection;
 - Alembic migrations;
 - Docker and Docker Compose base;
+- public CRUD for `imobiliarias` and `corretores` protected by `X-Cadastro-Token`;
+- admin login with JWT and internal CRUD;
+- MCP tools for Hermes with bearer token;
+- audit events for admin/public/MCP writes;
 - sanitized environment examples;
 - tests, lint and type-checking setup.
 
@@ -36,6 +40,7 @@ uv run ruff check .
 uv run ruff format --check .
 uv run mypy app
 uv run alembic upgrade head
+uv run python scripts/bootstrap_admin.py
 ```
 
 ## Security Notes
@@ -44,4 +49,3 @@ uv run alembic upgrade head
 - Keep the GitHub repository private.
 - Use SSH keys for VPS access.
 - Use a dedicated app DB role for runtime; do not run the app as the Postgres admin user.
-
