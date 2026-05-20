@@ -12,41 +12,41 @@ Algumas perguntas originais ja foram respondidas em 2026-05-20. Este arquivo ago
 4. Painel interno: inicialmente publico com login.
 5. Postgres atual: pode ser recriado.
 6. SSH/secrets: aprovado usar chave SSH e separar credenciais reais.
-7. `agency` significa imobiliaria.
-8. `broker` significa corretor.
-9. Fase 1 tera CRUD completo para imobiliarias e corretores via API.
-10. Hermes podera usar CRUD completo de imobiliarias e corretores via MCP.
-11. Havera um unico usuario admin inicial.
+7. Todo o sistema deve usar nomes em portugues, inclusive APIs, schemas, modulos e ferramentas MCP.
+8. Fase 1 tera CRUD completo para imobiliarias e corretores via API.
+9. Hermes podera usar CRUD completo de imobiliarias e corretores via MCP.
+10. Havera um unico usuario admin inicial.
+11. Admin inicial: `admin@onefiancalocaticia.com.br`.
+12. Para CRUD do frontend publico, usar a opcao mais simples: token seguro por cadastro, sem login de parceiro na Fase 1.
+13. `origem` representa a fonte do cadastro e pode ser automatica: `site`, `chatbot`, `one`, `app_interno`, `api`, `importacao` ou `outro`.
 
 ## Pontos ainda pendentes
 
 ### Para iniciar Fase 1
 
 1. Quais campos serao obrigatorios no cadastro publico de imobiliaria?
-   - Campos disponiveis: razao social, nome fantasia, CNPJ, WhatsApp, e-mail, site, Instagram, endereco, cidades/UFs de atuacao, responsavel principal, cargo do responsavel, media de locacoes por mes, aceite LGPD, opt-in marketing.
-   - Campos de sistema/admin: status da parceria, observacoes internas, origem/UTM.
-   - Recomendacao inicial obrigatoria: nome fantasia, razao social, CNPJ, WhatsApp, e-mail, cidade/UF, responsavel principal, aceite LGPD.
+   - Recomendacao atual: razao social, nome fantasia, CNPJ, WhatsApp, e-mail, endereco, cidades/UFs de atuacao, responsavel principal e cargo do responsavel.
+   - Opcionais confirmados: site, Instagram, media de locacoes por mes.
+   - Default solicitado: aceite LGPD = sim; opt-in marketing = sim.
+   - Pendencia juridica: validar se opt-in marketing pode vir pre-marcado como sim no formulario publico.
 
 2. Quais campos serao obrigatorios no cadastro publico de corretor?
-   - Campos disponiveis: nome completo, CPF, CRECI, WhatsApp, e-mail, cidade/UF, perfil profissional, tipo de corretor, imobiliaria vinculada, volume de indicacoes, aceite LGPD, opt-in marketing.
-   - Campos de sistema/admin: status da parceria, observacoes internas, origem/UTM.
-   - Recomendacao inicial obrigatoria: nome completo, CPF, WhatsApp, e-mail, cidade/UF, tipo de corretor, aceite LGPD.
+   - Recomendacao atual: nome completo, CPF, CRECI, WhatsApp, e-mail, cidade/UF e tipo de corretor.
+   - Opcionais confirmados: perfil profissional, imobiliaria vinculada e volume de indicacoes.
+   - Se tipo de corretor for `autonomo`, imobiliaria vinculada fica vazia/nula.
+   - Default solicitado: aceite LGPD = sim; opt-in marketing = sim.
+   - Pendencia juridica: validar se opt-in marketing pode vir pre-marcado como sim no formulario publico.
 
-3. O cadastro publico cria diretamente imobiliaria/corretor com status `pending`, ou deve criar uma solicitacao separada?
-   - Recomendacao inicial: criar diretamente o parceiro com status `pending`, sem modulo de leads na Fase 1.
+3. O cadastro publico cria diretamente imobiliaria/corretor com status `pendente`, ou deve criar uma solicitacao separada?
+   - Recomendacao inicial: criar diretamente o parceiro com status `pendente`, sem modulo de leads na Fase 1.
 
-4. Como o frontend publico vai autenticar consulta, alteracao e exclusao de cadastros?
-   - Decisao ja dada: a API deve permitir CRUD.
-   - Recomendacao tecnica: CRUD publico deve exigir token seguro por cadastro ou login de parceiro. Sem autenticacao, permitir apenas `POST`.
-   - Opcao segura para Fase 1: admin tem CRUD completo por JWT; frontend publico tem `POST` aberto e `GET/PATCH` por token retornado ou enviado por e-mail/WhatsApp; `DELETE` fica restrito ao admin.
-
-5. Qual sera o e-mail e senha inicial do unico usuario admin?
-   - Decisao ja dada: criar somente um admin e uma senha.
-   - Recomendacao: usar variaveis `BOOTSTRAP_ADMIN_EMAIL` e `BOOTSTRAP_ADMIN_PASSWORD` no `.env` real, sem hardcode.
-
-6. Confirmar se `DELETE` via Hermes deve existir na Fase 1.
+4. Confirmar se `DELETE` via Hermes deve existir na Fase 1.
    - Decisao ja dada: Hermes tera CRUD completo.
    - Recomendacao tecnica: implementar delete como soft delete/cancelamento, nunca exclusao fisica.
+
+5. Definir a senha inicial real do admin no `.env` da VPS.
+   - E-mail confirmado: `admin@onefiancalocaticia.com.br`.
+   - A senha nao deve ser registrada em documento versionado.
 
 ### Bloqueiam deploy publico final
 

@@ -12,10 +12,15 @@ Gerado em: 2026-05-20
 6. Postgres atual: pode ser recriado.
 7. SSH/secrets: aprovado usar chave SSH e separar credenciais.
 8. Fase 1 sera cadastro de imobiliarias e corretores.
-9. `agency` = imobiliaria; `broker` = corretor.
+9. Todo o sistema deve usar nomes em portugues, inclusive APIs, schemas, modulos e ferramentas MCP.
 10. A API deve permitir CRUD para imobiliarias e corretores.
 11. Hermes podera fazer CRUD completo via MCP na Fase 1.
 12. Havera um unico usuario admin inicial.
+13. Admin inicial: `admin@onefiancalocaticia.com.br`.
+14. CRUD do frontend publico usara token seguro por cadastro, sem login de parceiro na Fase 1.
+15. Opcionais de imobiliaria: site, Instagram, media de locacoes por mes.
+16. Opcionais de corretor: perfil profissional, imobiliaria vinculada e volume de indicacoes.
+17. `origem` representa fonte do cadastro e pode ser automatica ou informada pelo app interno.
 
 ## Impacto no plano
 
@@ -41,4 +46,8 @@ Para uso real com dados pessoais, financeiros e documentos, a recomendacao conti
 - Preparar reverse proxy/TLS como tarefa antes de operacao com dados reais.
 - Substituir acesso root por senha por chave SSH no primeiro ciclo operacional.
 - Implementar delete como soft delete/cancelamento.
-- Proteger consulta/alteracao publica por token seguro ou login de parceiro.
+- Proteger consulta/alteracao publica por token seguro por cadastro.
+- Usar `origem` com valores controlados: `site`, `chatbot`, `one`, `app_interno`, `api`, `importacao` e `outro`.
+- Guardar `origem_nome` livre quando o app interno precisar informar um nome especifico.
+- Guardar `origem_usuario_id` quando a origem for um usuario/admin logado.
+- Validar juridicamente antes de producao se opt-in marketing pode ter default `sim`.

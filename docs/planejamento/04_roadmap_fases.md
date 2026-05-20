@@ -31,8 +31,9 @@ Objetivo: permitir que o site/frontend e o Hermes cadastrem imobiliarias e corre
 
 Nomenclatura tecnica:
 
-- `agency` = imobiliaria;
-- `broker` = corretor.
+- todo o sistema usara nomes em portugues;
+- usar `imobiliaria` e `corretor` em rotas, schemas, modulos, tabelas e tools MCP;
+- evitar nomes tecnicos em ingles como `agency` e `broker`.
 
 Escopo funcional:
 
@@ -41,12 +42,12 @@ Escopo funcional:
 - cadastro de imobiliarias;
 - cadastro de corretores;
 - CRUD completo de imobiliarias e corretores para admin;
-- CRUD de imobiliarias e corretores para o frontend do site, desde que protegido por token seguro ou login de parceiro;
+- CRUD de imobiliarias e corretores para o frontend do site, protegido por token seguro por cadastro;
 - CRUD completo de imobiliarias e corretores via MCP/Hermes, com soft delete para remocao;
 - vinculo corretor-imobiliaria;
-- status operacional de parceiro: `pending`, `active`, `inactive`, `rejected`;
-- aceite LGPD obrigatorio nos cadastros publicos;
-- opt-in marketing separado e opcional;
+- status operacional de parceiro: `pendente`, `ativo`, `inativo`, `rejeitado`;
+- aceite LGPD com default `sim`;
+- opt-in marketing com default `sim`, sujeito a validacao juridica antes de producao;
 - auditoria basica de criacao/edicao;
 - APIs para o frontend do site;
 - APIs autenticadas para admin;
@@ -72,32 +73,42 @@ Dados de imobiliaria disponiveis para implementacao:
 - opt-in marketing;
 - origem/UTM.
 
-Obrigatorios recomendados para formulario publico de imobiliaria:
+Obrigatorios atuais para formulario publico de imobiliaria:
 
-- nome fantasia;
 - razao social;
+- nome fantasia;
 - CNPJ;
 - WhatsApp;
 - e-mail;
-- cidade/UF;
+- endereco;
+- cidades/UFs de atuacao;
 - responsavel principal;
-- aceite LGPD.
+- cargo do responsavel.
 
-Campos opcionais recomendados para formulario publico de imobiliaria:
+Campos opcionais confirmados para formulario publico de imobiliaria:
 
 - site;
 - Instagram;
-- endereco completo;
-- cidades/UFs de atuacao;
-- cargo do responsavel;
-- media de locacoes por mes;
-- opt-in marketing.
+- media de locacoes por mes.
 
 Campos controlados pelo sistema/admin:
 
 - status da parceria;
 - observacoes internas;
-- origem/UTM.
+- aceite LGPD, default `sim`;
+- opt-in marketing, default `sim`, sujeito a validacao juridica;
+- origem;
+- origem_nome;
+- origem_usuario_id;
+- UTM.
+
+Origem:
+
+- `origem` identifica de onde veio o cadastro;
+- valores controlados: `site`, `chatbot`, `one`, `app_interno`, `api`, `importacao`, `outro`;
+- `origem_nome` permite informar um nome livre pelo app interno;
+- `origem_usuario_id` guarda o usuario/admin logado quando aplicavel;
+- UTM segue como metadados de campanha: `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`.
 
 Dados de corretor disponiveis para implementacao:
 
@@ -117,76 +128,85 @@ Dados de corretor disponiveis para implementacao:
 - opt-in marketing;
 - origem/UTM.
 
-Obrigatorios recomendados para formulario publico de corretor:
+Obrigatorios atuais para formulario publico de corretor:
 
 - nome completo;
 - CPF;
+- CRECI;
 - WhatsApp;
 - e-mail;
 - cidade/UF;
-- tipo de corretor;
-- aceite LGPD.
+- tipo de corretor.
 
-Campos opcionais recomendados para formulario publico de corretor:
+Campos opcionais confirmados para formulario publico de corretor:
 
-- CRECI;
 - perfil profissional;
 - imobiliaria vinculada;
-- volume de indicacoes;
-- opt-in marketing.
+- volume de indicacoes.
+
+Observacoes sobre corretor:
+
+- `perfil_profissional` e um campo livre opcional para descrever a atuacao do corretor; se nao houver uso claro no frontend, pode ficar nulo na Fase 1;
+- se o tipo for `autonomo`, `imobiliaria_vinculada_id` fica nulo;
+- se o tipo for `vinculado_imobiliaria`, `imobiliaria_vinculada_id` deve apontar para uma imobiliaria existente ou para uma imobiliaria criada no mesmo fluxo.
 
 Campos controlados pelo sistema/admin:
 
 - status da parceria;
 - observacoes internas;
-- origem/UTM.
+- aceite LGPD, default `sim`;
+- opt-in marketing, default `sim`, sujeito a validacao juridica;
+- origem;
+- origem_nome;
+- origem_usuario_id;
+- UTM.
 
 APIs sugeridas para o site:
 
 ```text
-POST   /v1/public/agencies
-GET    /v1/public/agencies/{agency_id}
-PATCH  /v1/public/agencies/{agency_id}
-POST   /v1/public/brokers
-GET    /v1/public/brokers/{broker_id}
-PATCH  /v1/public/brokers/{broker_id}
+POST   /v1/publico/imobiliarias
+GET    /v1/publico/imobiliarias/{imobiliaria_id}
+PATCH  /v1/publico/imobiliarias/{imobiliaria_id}
+POST   /v1/publico/corretores
+GET    /v1/publico/corretores/{corretor_id}
+PATCH  /v1/publico/corretores/{corretor_id}
 ```
 
-Observacao: `GET/PATCH` publicos precisam de token seguro por cadastro ou login de parceiro. `DELETE` publico nao e recomendado na Fase 1; deve ficar no admin ou virar solicitacao de cancelamento.
+Observacao: `POST` publico retorna `id` e `token_cadastro` uma unica vez. `GET/PATCH` publicos exigem header `X-Cadastro-Token`. `DELETE` publico nao e recomendado na Fase 1; deve ficar no admin ou virar solicitacao de cancelamento.
 
 APIs admin sugeridas:
 
 ```text
-POST   /v1/admin/auth/login
-GET    /v1/admin/me
-GET    /v1/admin/agencies
-GET    /v1/admin/agencies/{agency_id}
-PATCH  /v1/admin/agencies/{agency_id}
-DELETE /v1/admin/agencies/{agency_id}
-GET    /v1/admin/brokers
-GET    /v1/admin/brokers/{broker_id}
-PATCH  /v1/admin/brokers/{broker_id}
-DELETE /v1/admin/brokers/{broker_id}
-POST   /v1/admin/agencies/{agency_id}/brokers/{broker_id}
-DELETE /v1/admin/agencies/{agency_id}/brokers/{broker_id}
+POST   /v1/admin/autenticacao/login
+GET    /v1/admin/eu
+GET    /v1/admin/imobiliarias
+GET    /v1/admin/imobiliarias/{imobiliaria_id}
+PATCH  /v1/admin/imobiliarias/{imobiliaria_id}
+DELETE /v1/admin/imobiliarias/{imobiliaria_id}
+GET    /v1/admin/corretores
+GET    /v1/admin/corretores/{corretor_id}
+PATCH  /v1/admin/corretores/{corretor_id}
+DELETE /v1/admin/corretores/{corretor_id}
+POST   /v1/admin/imobiliarias/{imobiliaria_id}/corretores/{corretor_id}
+DELETE /v1/admin/imobiliarias/{imobiliaria_id}/corretores/{corretor_id}
 ```
 
 Tools MCP sugeridas para Hermes na Fase 1:
 
 ```text
-create_agency
-get_agency
-update_agency
-delete_agency
-create_broker
-get_broker
-update_broker
-delete_broker
-link_broker_to_agency
-append_partner_note
+criar_imobiliaria
+obter_imobiliaria
+atualizar_imobiliaria
+remover_imobiliaria
+criar_corretor
+obter_corretor
+atualizar_corretor
+remover_corretor
+vincular_corretor_imobiliaria
+adicionar_observacao_parceiro
 ```
 
-Observacao: `delete_*` via MCP deve ser soft delete/cancelamento, com auditoria.
+Observacao: `remover_*` via MCP deve ser soft delete/cancelamento, com auditoria.
 
 Fora do escopo da Fase 1:
 
