@@ -30,7 +30,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
 
   one-mcp:
     build:
@@ -41,7 +41,7 @@ services:
       APP_ENV: local
       APP_DATABASE_URL: postgresql+psycopg://one_app:one_app_dev_password@postgres:5432/one
     ports:
-      - "8100:8100"
+      - "127.0.0.1:8100:8100"
 
 volumes:
   one_postgres_dev_data:
