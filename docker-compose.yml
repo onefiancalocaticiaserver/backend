@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: one-postgres-dev
+    environment:
+      POSTGRES_DB: one
+      POSTGRES_USER: one_app
+      POSTGRES_PASSWORD: one_app_dev_password
+      TZ: America/Sao_Paulo
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - one_postgres_dev_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U one_app -d one"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  one-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: one-api-dev
+    environment:
+      APP_ENV: local
+      APP_DATABASE_URL: postgresql+psycopg://one_app:one_app_dev_password@postgres:5432/one
+      MIGRATION_DATABASE_URL: postgresql+psycopg://one_app:one_app_dev_password@postgres:5432/one
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  one-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    container_name: one-mcp-dev
+    environment:
+      APP_ENV: local
+      APP_DATABASE_URL: postgresql+psycopg://one_app:one_app_dev_password@postgres:5432/one
+    ports:
+      - "8100:8100"
+
+volumes:
+  one_postgres_dev_data:

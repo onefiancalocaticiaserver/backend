@@ -1,0 +1,63 @@
+services:
+  postgresql-1ua2:
+    image: postgres:18
+    container_name: postgresql-1ua2
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      TZ: ${APP_TIMEZONE:-America/Sao_Paulo}
+    volumes:
+      - one_postgres_data:/var/lib/postgresql
+    networks:
+      - one_backend
+    restart: unless-stopped
+    expose:
+      - "5432"
+
+  one-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: one-api
+    env_file:
+      - ./.env
+    depends_on:
+      - postgresql-1ua2
+    volumes:
+      - /srv/one-fianca/documents:/app/storage/documents
+      - /srv/one-fianca/backups:/app/storage/backups
+      - /srv/one-fianca/logs:/app/logs
+    networks:
+      - one_public
+      - one_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+  one-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    container_name: one-mcp
+    env_file:
+      - ./.env
+    depends_on:
+      - one-api
+    networks:
+      - one_backend
+    restart: unless-stopped
+    expose:
+      - "8100"
+
+volumes:
+  one_postgres_data:
+
+networks:
+  one_public:
+    driver: bridge
+  one_backend:
+    driver: bridge
+    internal: true
