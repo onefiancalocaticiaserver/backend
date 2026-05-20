@@ -33,8 +33,12 @@ Failure response:
 APIs publicas para o frontend do site:
 
 ```http
-POST /v1/public/agencies
-POST /v1/public/brokers
+POST   /v1/public/agencies
+GET    /v1/public/agencies/{agency_id}
+PATCH  /v1/public/agencies/{agency_id}
+POST   /v1/public/brokers
+GET    /v1/public/brokers/{broker_id}
+PATCH  /v1/public/brokers/{broker_id}
 ```
 
 APIs autenticadas para o admin unico inicial:
@@ -45,11 +49,19 @@ GET    /v1/admin/me
 GET    /v1/admin/agencies
 GET    /v1/admin/agencies/{agency_id}
 PATCH  /v1/admin/agencies/{agency_id}
+DELETE /v1/admin/agencies/{agency_id}
 GET    /v1/admin/brokers
 GET    /v1/admin/brokers/{broker_id}
 PATCH  /v1/admin/brokers/{broker_id}
+DELETE /v1/admin/brokers/{broker_id}
 POST   /v1/admin/agencies/{agency_id}/brokers/{broker_id}
 DELETE /v1/admin/agencies/{agency_id}/brokers/{broker_id}
 ```
 
-O contrato final dos payloads sera definido na implementacao da Fase 1 a partir do roadmap.
+Observacoes:
+
+- `agency` significa imobiliaria.
+- `broker` significa corretor.
+- `GET/PATCH` publicos devem exigir token seguro por cadastro ou login de parceiro.
+- `DELETE` publico nao entra na recomendacao inicial; remocao deve ser admin ou solicitacao autenticada.
+- `DELETE` admin e MCP devem ser soft delete.

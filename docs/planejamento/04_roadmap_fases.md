@@ -29,20 +29,28 @@ Aceite:
 
 Objetivo: permitir que o site/frontend e o Hermes cadastrem imobiliarias e corretores, e que um unico admin interno consulte e gerencie esses cadastros.
 
+Nomenclatura tecnica:
+
+- `agency` = imobiliaria;
+- `broker` = corretor.
+
 Escopo funcional:
 
 - um unico usuario admin inicial;
 - login admin com JWT;
 - cadastro de imobiliarias;
 - cadastro de corretores;
+- CRUD completo de imobiliarias e corretores para admin;
+- CRUD de imobiliarias e corretores para o frontend do site, desde que protegido por token seguro ou login de parceiro;
+- CRUD completo de imobiliarias e corretores via MCP/Hermes, com soft delete para remocao;
 - vinculo corretor-imobiliaria;
 - status operacional de parceiro: `pending`, `active`, `inactive`, `rejected`;
 - aceite LGPD obrigatorio nos cadastros publicos;
 - opt-in marketing separado e opcional;
 - auditoria basica de criacao/edicao;
-- APIs publicas de envio para o frontend do site;
+- APIs para o frontend do site;
 - APIs autenticadas para admin;
-- tools MCP iniciais para Hermes criar/atualizar cadastro de parceiro e consultar campos faltantes.
+- tools MCP iniciais para Hermes operar CRUD de parceiro.
 
 Dados de imobiliaria disponiveis para implementacao:
 
@@ -64,6 +72,33 @@ Dados de imobiliaria disponiveis para implementacao:
 - opt-in marketing;
 - origem/UTM.
 
+Obrigatorios recomendados para formulario publico de imobiliaria:
+
+- nome fantasia;
+- razao social;
+- CNPJ;
+- WhatsApp;
+- e-mail;
+- cidade/UF;
+- responsavel principal;
+- aceite LGPD.
+
+Campos opcionais recomendados para formulario publico de imobiliaria:
+
+- site;
+- Instagram;
+- endereco completo;
+- cidades/UFs de atuacao;
+- cargo do responsavel;
+- media de locacoes por mes;
+- opt-in marketing.
+
+Campos controlados pelo sistema/admin:
+
+- status da parceria;
+- observacoes internas;
+- origem/UTM.
+
 Dados de corretor disponiveis para implementacao:
 
 - nome completo;
@@ -82,12 +117,42 @@ Dados de corretor disponiveis para implementacao:
 - opt-in marketing;
 - origem/UTM.
 
-APIs publicas sugeridas para o site:
+Obrigatorios recomendados para formulario publico de corretor:
+
+- nome completo;
+- CPF;
+- WhatsApp;
+- e-mail;
+- cidade/UF;
+- tipo de corretor;
+- aceite LGPD.
+
+Campos opcionais recomendados para formulario publico de corretor:
+
+- CRECI;
+- perfil profissional;
+- imobiliaria vinculada;
+- volume de indicacoes;
+- opt-in marketing.
+
+Campos controlados pelo sistema/admin:
+
+- status da parceria;
+- observacoes internas;
+- origem/UTM.
+
+APIs sugeridas para o site:
 
 ```text
-POST /v1/public/agencies
-POST /v1/public/brokers
+POST   /v1/public/agencies
+GET    /v1/public/agencies/{agency_id}
+PATCH  /v1/public/agencies/{agency_id}
+POST   /v1/public/brokers
+GET    /v1/public/brokers/{broker_id}
+PATCH  /v1/public/brokers/{broker_id}
 ```
+
+Observacao: `GET/PATCH` publicos precisam de token seguro por cadastro ou login de parceiro. `DELETE` publico nao e recomendado na Fase 1; deve ficar no admin ou virar solicitacao de cancelamento.
 
 APIs admin sugeridas:
 
@@ -97,9 +162,11 @@ GET    /v1/admin/me
 GET    /v1/admin/agencies
 GET    /v1/admin/agencies/{agency_id}
 PATCH  /v1/admin/agencies/{agency_id}
+DELETE /v1/admin/agencies/{agency_id}
 GET    /v1/admin/brokers
 GET    /v1/admin/brokers/{broker_id}
 PATCH  /v1/admin/brokers/{broker_id}
+DELETE /v1/admin/brokers/{broker_id}
 POST   /v1/admin/agencies/{agency_id}/brokers/{broker_id}
 DELETE /v1/admin/agencies/{agency_id}/brokers/{broker_id}
 ```
@@ -107,13 +174,19 @@ DELETE /v1/admin/agencies/{agency_id}/brokers/{broker_id}
 Tools MCP sugeridas para Hermes na Fase 1:
 
 ```text
-get_or_create_partner_intake_session
-create_or_update_agency
-create_or_update_broker
+create_agency
+get_agency
+update_agency
+delete_agency
+create_broker
+get_broker
+update_broker
+delete_broker
 link_broker_to_agency
-list_partner_missing_fields
 append_partner_note
 ```
+
+Observacao: `delete_*` via MCP deve ser soft delete/cancelamento, com auditoria.
 
 Fora do escopo da Fase 1:
 
@@ -173,4 +246,3 @@ Escopo:
 - portal de parceiros;
 - RLS ou isolamento tenant;
 - conciliacao automatica de pagamento.
-

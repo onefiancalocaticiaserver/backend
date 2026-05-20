@@ -11,6 +11,11 @@ Gerado em: 2026-05-20
 5. Painel interno: inicialmente publico com login.
 6. Postgres atual: pode ser recriado.
 7. SSH/secrets: aprovado usar chave SSH e separar credenciais.
+8. Fase 1 sera cadastro de imobiliarias e corretores.
+9. `agency` = imobiliaria; `broker` = corretor.
+10. A API deve permitir CRUD para imobiliarias e corretores.
+11. Hermes podera fazer CRUD completo via MCP na Fase 1.
+12. Havera um unico usuario admin inicial.
 
 ## Impacto no plano
 
@@ -35,3 +40,5 @@ Para uso real com dados pessoais, financeiros e documentos, a recomendacao conti
 - Criar admin login desde o inicio, pois o painel sera publicado inicialmente.
 - Preparar reverse proxy/TLS como tarefa antes de operacao com dados reais.
 - Substituir acesso root por senha por chave SSH no primeiro ciclo operacional.
+- Implementar delete como soft delete/cancelamento.
+- Proteger consulta/alteracao publica por token seguro ou login de parceiro.

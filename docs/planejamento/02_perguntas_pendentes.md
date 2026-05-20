@@ -12,28 +12,41 @@ Algumas perguntas originais ja foram respondidas em 2026-05-20. Este arquivo ago
 4. Painel interno: inicialmente publico com login.
 5. Postgres atual: pode ser recriado.
 6. SSH/secrets: aprovado usar chave SSH e separar credenciais reais.
+7. `agency` significa imobiliaria.
+8. `broker` significa corretor.
+9. Fase 1 tera CRUD completo para imobiliarias e corretores via API.
+10. Hermes podera usar CRUD completo de imobiliarias e corretores via MCP.
+11. Havera um unico usuario admin inicial.
 
 ## Pontos ainda pendentes
 
 ### Para iniciar Fase 1
 
 1. Quais campos serao obrigatorios no cadastro publico de imobiliaria?
-   - Recomendacao inicial: nome fantasia, razao social, CNPJ, WhatsApp, e-mail, cidade/UF, responsavel, aceite LGPD.
+   - Campos disponiveis: razao social, nome fantasia, CNPJ, WhatsApp, e-mail, site, Instagram, endereco, cidades/UFs de atuacao, responsavel principal, cargo do responsavel, media de locacoes por mes, aceite LGPD, opt-in marketing.
+   - Campos de sistema/admin: status da parceria, observacoes internas, origem/UTM.
+   - Recomendacao inicial obrigatoria: nome fantasia, razao social, CNPJ, WhatsApp, e-mail, cidade/UF, responsavel principal, aceite LGPD.
 
 2. Quais campos serao obrigatorios no cadastro publico de corretor?
-   - Recomendacao inicial: nome completo, CPF, WhatsApp, e-mail, cidade/UF, tipo de corretor, aceite LGPD.
+   - Campos disponiveis: nome completo, CPF, CRECI, WhatsApp, e-mail, cidade/UF, perfil profissional, tipo de corretor, imobiliaria vinculada, volume de indicacoes, aceite LGPD, opt-in marketing.
+   - Campos de sistema/admin: status da parceria, observacoes internas, origem/UTM.
+   - Recomendacao inicial obrigatoria: nome completo, CPF, WhatsApp, e-mail, cidade/UF, tipo de corretor, aceite LGPD.
 
-3. O cadastro publico cria diretamente `agency`/`broker` com status `pending`, ou deve criar uma solicitacao separada?
+3. O cadastro publico cria diretamente imobiliaria/corretor com status `pending`, ou deve criar uma solicitacao separada?
    - Recomendacao inicial: criar diretamente o parceiro com status `pending`, sem modulo de leads na Fase 1.
 
-4. O frontend publico podera consultar dados depois de enviar o cadastro, ou apenas enviar?
-   - Recomendacao inicial: apenas `POST` publico; consulta/listagem somente no admin autenticado.
+4. Como o frontend publico vai autenticar consulta, alteracao e exclusao de cadastros?
+   - Decisao ja dada: a API deve permitir CRUD.
+   - Recomendacao tecnica: CRUD publico deve exigir token seguro por cadastro ou login de parceiro. Sem autenticacao, permitir apenas `POST`.
+   - Opcao segura para Fase 1: admin tem CRUD completo por JWT; frontend publico tem `POST` aberto e `GET/PATCH` por token retornado ou enviado por e-mail/WhatsApp; `DELETE` fica restrito ao admin.
 
 5. Qual sera o e-mail e senha inicial do unico usuario admin?
+   - Decisao ja dada: criar somente um admin e uma senha.
    - Recomendacao: usar variaveis `BOOTSTRAP_ADMIN_EMAIL` e `BOOTSTRAP_ADMIN_PASSWORD` no `.env` real, sem hardcode.
 
-6. O Hermes na Fase 1 podera criar/atualizar imobiliarias e corretores, ou apenas consultar campos faltantes?
-   - Recomendacao inicial: permitir criar/atualizar parceiro via MCP, sem ferramentas genericas de busca ampla.
+6. Confirmar se `DELETE` via Hermes deve existir na Fase 1.
+   - Decisao ja dada: Hermes tera CRUD completo.
+   - Recomendacao tecnica: implementar delete como soft delete/cancelamento, nunca exclusao fisica.
 
 ### Bloqueiam deploy publico final
 
