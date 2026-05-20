@@ -33,6 +33,19 @@ Crie um `ops.env` fora do Git a partir de `ops.env.example` e rode:
 OPS_ENV=/caminho/seguro/ops.env scripts/deploy_vps.sh
 ```
 
+Antes do deploy, valide SSH e Docker:
+
+```bash
+OPS_ENV=/caminho/seguro/ops.env scripts/check_vps_access.sh
+```
+
+Se a chave ainda nao estiver instalada na VPS, use uma senha temporaria em
+runtime:
+
+```bash
+VPS_SSH_PASSWORD='senha-temporaria' OPS_ENV=/caminho/seguro/ops.env scripts/install_vps_ssh_key.sh
+```
+
 O script:
 
 - cria diretorios em `/opt/one-fianca-backend` e `/srv/one-fianca`;
