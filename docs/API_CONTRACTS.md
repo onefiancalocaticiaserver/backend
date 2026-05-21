@@ -30,6 +30,12 @@ Failure response:
 
 ## Fase 1 - Cadastros de parceiros
 
+Documento detalhado para integracao do frontend:
+
+```text
+docs/frontend-cadastros/README.md
+```
+
 APIs publicas para o frontend do site:
 
 ```http
