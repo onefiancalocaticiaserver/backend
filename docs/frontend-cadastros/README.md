@@ -54,4 +54,4 @@ https://api.onefiancalocaticia.com.br
 - O `token_cadastro` so aparece na resposta do `POST`; a API nao permite recuperar esse token depois.
 - `aceite_lgpd` e `opt_in_marketing` tem default `true` no backend.
 - `opt_in_marketing=true` ainda deve ser revisado juridicamente antes de producao final.
-
+- Se o frontend rodar em uma origem diferente das configuradas em `CORS_ALLOWED_ORIGINS`, o navegador pode bloquear a chamada mesmo com a API online.
