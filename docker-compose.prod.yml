@@ -13,6 +13,7 @@ services:
       - one_postgres_data:/var/lib/postgresql
     networks:
       - one_backend
+      - one_public
     restart: unless-stopped
     ports:
       - "127.0.0.1:15432:5432"
