@@ -14,6 +14,8 @@ services:
     networks:
       - one_backend
     restart: unless-stopped
+    ports:
+      - "127.0.0.1:15432:5432"
     expose:
       - "5432"
 
