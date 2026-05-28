@@ -18,6 +18,7 @@ venv/
 .env.*
 *.env
 vps.env
+setup_dbeaver.env
 !.env.example
 !ops.env.example
 *.key
@@ -40,4 +41,3 @@ storage/
 .DS_Store
 .idea/
 .vscode/
-

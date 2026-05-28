@@ -25,6 +25,17 @@ domain/subdomain before opening regular access.
 
 `one-mcp` and Postgres must stay internal. Do not expose either publicly.
 
+## Database Access For DBeaver
+
+Use SSH Tunnel. The sanitized runbook is available at:
+
+```text
+docs/DBEAVER_POSTGRES.md
+```
+
+The local file `setup_dbeaver.env` contains the real DBeaver values and is
+ignored by Git.
+
 ## Local Deploy Command
 
 Crie um `ops.env` fora do Git a partir de `ops.env.example` e rode:
